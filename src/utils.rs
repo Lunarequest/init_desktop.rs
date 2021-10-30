@@ -1,6 +1,10 @@
+use reqwest::blocking::get;
+use std::fs::File;
+use std::io::copy;
 use std::path::Path;
 use std::process::Command;
 use std::{env, fs};
+use tempfile::Builder;
 
 pub fn exec_exists(binary: &str) -> bool {
     // first we get the PATH env var
@@ -62,9 +66,25 @@ pub fn install_exec(binary: &str) -> Result<(), String> {
 }
 
 pub fn install_omz() -> Result<(), String> {
+    let target = "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh";
+    let response = get(target).unwrap();
+    let tmp_dir = Builder::new().prefix("example").tempdir().unwrap();
+    let mut dest = {
+        let fname = response
+            .url()
+            .path_segments()
+            .and_then(|segments| segments.last())
+            .and_then(|name| if name.is_empty() { None } else { Some(name) })
+            .unwrap_or("tmp.bin");
+        println!("file to download: '{}'", fname);
+        let fname = tmp_dir.path().join(fname);
+        println!("will be located under: '{:?}'", fname);
+        File::create(fname).unwrap()
+    };
+    let content = response.text().unwrap();
+    copy(&mut content.as_bytes(), &mut dest).unwrap();
     match Command::new("sh")
-        .arg("-c")
-        .arg("$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)")
+        .arg(format!("{}/install.sh", tmp_dir.path().display()))
         .status()
     {
         Ok(status_code) => {

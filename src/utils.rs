@@ -120,3 +120,21 @@ pub fn stow(path: &Path) -> Result<(), String> {
         Err(e) => panic!("{}", e),
     }
 }
+
+pub fn cargo_install(package_name: &str) -> Result<(), String> {
+    match Command::new("cargo")
+        .arg("install")
+        .arg(package_name)
+        .status()
+    {
+        Ok(status_code) => {
+            // check if it returns a 0
+            if status_code.success() {
+                Ok(())
+            } else {
+                Err(status_code.to_string())
+            }
+        }
+        Err(e) => panic!("{}", e),
+    }
+}

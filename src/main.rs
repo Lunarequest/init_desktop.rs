@@ -74,4 +74,8 @@ fn main() {
         )),
         "https://github.com/kristijanhusak/vim-packager.git",
     );
+    match utils::cargo_install("vivid") {
+        Ok(_) => println!("installed vivid"),
+        Err(e) => panic!("{}", e),
+    };
 }

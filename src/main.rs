@@ -1,7 +1,8 @@
 use shellexpand;
+use std::fs::remove_file;
 use std::path::Path;
 mod clone;
-mod installdep;
+mod utils;
 
 fn main() {
     // check if ~/.dotfiles exists
@@ -17,11 +18,26 @@ fn main() {
         let _dotfile_repo = clone::clone_repo(path, "https://github.com/Lunarequest/Dotfiles");
     }
     // check if stow is installed
-    if !installdep::exec_exists("stow") {
+    if !utils::exec_exists("stow") {
         // if it isn't, install it
-        match installdep::install_exec("stow") {
-            Ok(()) => println!("installed stow"),
+        match utils::install_exec("stow") {
+            Ok(_) => println!("installed stow"),
             Err(e) => panic!("{}", e),
         }
     }
+
+    // install omz
+    match utils::install_omz() {
+        Ok(_) => println!("Installed omz"),
+        Err(e) => println!("failed to install omz: {}", e),
+    };
+    
+    // delete ~/.zshrc since we replace it
+    remove_file(shellexpand::tilde("~/.zshrc"));
+
+    // over here we stow all our dotfiles, GNU stow is awesome
+    match utils::stow(path) {
+        Ok(_) => println!("stowed dotfiles"),
+        Err(e) => panic!("failed to stow dotfiles, exited with code {}", e),
+    };
 }

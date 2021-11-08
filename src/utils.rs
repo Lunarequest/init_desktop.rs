@@ -158,3 +158,19 @@ pub fn cargo_install(package_name: &str) -> Result<(), String> {
         Err(e) => panic!("{}", e),
     }
 }
+
+pub fn install_deps() -> Result<(), String> {
+    if !exec_exists("zsh") {
+        install_exec("zsh").unwrap();
+    }
+    if !exec_exists("nvim") {
+        install_exec("neovim").unwrap();
+    }
+    if !exec_exists("vim") {
+        install_exec("vim").unwrap();
+    }
+    if !exec_exists("curl") {
+        install_exec("curl").unwrap();
+    }
+    Ok(())
+}

@@ -3,9 +3,7 @@ name = "init_desktop"
 version = "0.1.0"
 edition = "2021"
 
-[package.metadata.appimage]
-auto_link = true
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+ #See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 git2 = "0.13.23"

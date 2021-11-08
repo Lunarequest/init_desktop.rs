@@ -15,5 +15,5 @@ pub fn clone_repo(path: &Path, url: &str) -> Repository {
         Err(e) => panic!("could not clone repo: {}", e),
     };
 
-    return repo;
+    repo
 }

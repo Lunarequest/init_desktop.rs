@@ -5,10 +5,7 @@ mod utils;
 
 fn main() {
     // check if ~/.dotfiles exists
-    match utils::install_deps() {
-        Ok(()) => println!("installed deps"),
-        Err(e) => panic!("{}", e),
-    }
+    utils::install_deps();
     let dotfile_dir = shellexpand::tilde("~/.dotfiles").to_string();
     let omz_dir = shellexpand::tilde("~/.oh-my-zsh").to_string();
     let omz_path = Path::new(&omz_dir);

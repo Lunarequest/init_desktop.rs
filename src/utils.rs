@@ -102,7 +102,15 @@ pub fn install_omz() -> Result<(), String> {
 
 pub fn stow(path: &Path) -> Result<(), String> {
     // first we get a ReadDir of all the files/dirs in the path
-    let blacklist: Vec<&str> = vec!["./.git", "./.github", "./nvim_old","./.gitignore","./.stylua.toml","./README.md","./wallpaper.png"];
+    let blacklist: Vec<&str> = vec![
+        "./.git",
+        "./.github",
+        "./nvim_old",
+        "./.gitignore",
+        "./.stylua.toml",
+        "./README.md",
+        "./wallpaper.png",
+    ];
     let current_dir = current_dir().unwrap();
     assert!(set_current_dir(path).is_ok());
     let paths = fs::read_dir(".").unwrap();
@@ -115,8 +123,8 @@ pub fn stow(path: &Path) -> Result<(), String> {
             Some(x) => x.to_string(),
             None => panic!(""),
         };
-        println!("{}:{}", a,blacklist.iter().any(|&i| i==a));
-        if !path.as_ref().unwrap().path().is_file() && blacklist.iter().any(|&i| i==a)==false{
+        println!("{}:{}", a, blacklist.iter().any(|&i| i == a));
+        if !path.as_ref().unwrap().path().is_file() && !blacklist.iter().any(|&i| i == a) {
             println!("{}", path.as_ref().unwrap().path().display());
             stow.arg(
                 path.unwrap()

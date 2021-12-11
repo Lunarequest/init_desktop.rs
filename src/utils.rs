@@ -116,7 +116,7 @@ pub fn stow(path: &Path) -> Result<(), String> {
             None => panic!(""),
         };
         println!("{}:{}", a,blacklist.iter().any(|&i| i==a));
-        if !path.as_ref().unwrap().path().is_file() &&` blacklist.iter().any(|&i| i==a)==false{
+        if !path.as_ref().unwrap().path().is_file() && blacklist.iter().any(|&i| i==a)==false{
             println!("{}", path.as_ref().unwrap().path().display());
             stow.arg(
                 path.unwrap()

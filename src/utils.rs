@@ -186,15 +186,18 @@ pub fn cargo_install(package_name: &str) -> Result<(), String> {
 
 pub fn install_deps() {
     if !exec_exists("zsh") {
-        install_exec("zsh").expect("Zsh was not installed, Attempted to install zsh");
+        install_exec("zsh").expect("Zsh was not installed, failed to install zsh");
     }
     if !exec_exists("nvim") {
-        install_exec("neovim").expect("Neovim was not installed, Attempted to install neovim");
+        install_exec("neovim").expect("Neovim was not installed, failed to install neovim");
     }
     if !exec_exists("vim") {
-        install_exec("vim").expect("Vim was not installed, Attempted to install vim");
+        install_exec("vim").expect("Vim was not installed, faileded to install vim");
     }
     if !exec_exists("curl") {
-        install_exec("curl").expect("curl was not installed, Attempted to install curl");
+        install_exec("curl").expect("curl was not installed, failed to install curl");
+    }
+    if !exec_exists("ssh") {
+        install_exec("ssh").expect("ssh was not installed, failed to install it")
     }
 }

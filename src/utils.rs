@@ -152,7 +152,7 @@ pub fn stow(path: &Path) -> Result<(), String> {
         };
         //println!("{}:{}", a, blacklist.iter().any(|&i| i == a));
         if !path.as_ref().unwrap().path().is_file() && !blacklist.iter().any(|&i| i == a) {
-            println!("{}", path.as_ref().unwrap().path().display());
+            //println!("{}", path.as_ref().unwrap().path().display());
             stow.arg(
                 path.unwrap()
                     .path()

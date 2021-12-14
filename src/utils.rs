@@ -78,6 +78,17 @@ pub fn install_exec(binary: &str) -> Result<(), String> {
             }
             Err(e) => Err(format!("{}", e)),
         }
+    } else if exec_exists("nix-env") {
+        match Command::new("nix-env").arg("-iA").arg(binary).status() {
+            Ok(status_code) => {
+                if status_code.success() {
+                    Ok(())
+                } else {
+                    Err(status_code.to_string())
+                }
+            }
+            Err(e) => Err(format!("{}", e)),
+        }
     } else {
         Err("We currntly do not support your package manager".to_string())
     }

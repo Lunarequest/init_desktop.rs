@@ -212,3 +212,8 @@ pub fn install_deps() {
         install_exec("ssh").expect("ssh was not installed, failed to install it")
     }
 }
+
+pub fn path_exists(path: String) -> bool {
+    let path_as_path = Path::new(&path);
+    return path_as_path.exists();
+}

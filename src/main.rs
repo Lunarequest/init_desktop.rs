@@ -8,16 +8,17 @@ fn main() {
     utils::install_deps();
     let dotfile_dir = shellexpand::tilde("~/.dotfiles").to_string();
     let omz_dir = shellexpand::tilde("~/.oh-my-zsh").to_string();
-    let omz_path = Path::new(&omz_dir);
-    let path = Path::new(&dotfile_dir);
-    if path.exists() {
+    if utils::path_exists(dotfile_dir.clone()) {
         println!(
             "path {}, exists assuming dotfiles already cloned",
             dotfile_dir
         );
     } else {
         // if it doesn't exist git clone it
-        let _dotfile_repo = clone::clone_repo(path, "https://github.com/Lunarequest/Dotfiles");
+        let _dotfile_repo = clone::clone_repo(
+            Path::new(&dotfile_dir),
+            "https://github.com/Lunarequest/Dotfiles",
+        );
     }
     // check if stow is installed
     if !utils::exec_exists("stow") {
@@ -29,7 +30,7 @@ fn main() {
     }
 
     // install omz
-    if omz_path.exists() {
+    if utils::path_exists(omz_dir.clone()) {
         println!("path {} exists assuming omz is already installed", omz_dir)
     } else {
         match utils::install_omz() {
@@ -45,18 +46,28 @@ fn main() {
     }
 
     // over here we stow all our dotfiles, GNU stow is awesome
-    match utils::stow(path) {
+    match utils::stow(Path::new(&dotfile_dir)) {
         Ok(_) => println!("stowed dotfiles"),
         Err(e) => panic!("failed to stow dotfiles, exited with code {}", e),
     };
     // now we install some deps of the zshrc
     println!("installing zsh-autosuggestions");
-    clone::clone_repo(
-        Path::new(&*shellexpand::tilde(
-            "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions",
-        )),
-        "https://github.com/zsh-users/zsh-autosuggestions.git",
-    );
+    if utils::path_exists(
+        shellexpand::tilde("~/.oh-my-zsh/custom/plugins/zsh-autosuggestions").to_string(),
+    ) {
+        println!("installing zsh-autosuggestions");
+        clone::clone_repo(
+            Path::new(&*shellexpand::tilde(
+                "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions",
+            )),
+            "https://github.com/zsh-users/zsh-autosuggestions.git",
+        );
+    }else{
+        println!("~/.oh-my-zsh/custom/plugins/zsh-autosuggestions exists assuming zsh-autosuggestions is installed")
+    }
+    if utils::path_exists(
+         shellexpand::tilde("~/.oh-my-zsh/custom/plugins/zsh-history-substring-search").to_string(),
+    ){
     println!("installing zsh histroy substring search");
     clone::clone_repo(
         Path::new(&*shellexpand::tilde(
@@ -64,6 +75,9 @@ fn main() {
         )),
         "https://github.com/zsh-users/zsh-history-substring-search.git",
     );
+    }else{
+        println!("~/.oh-my-zsh/custom/plugins/zsh-history-substring-search exists assuming zsh-history-substring-search is installed")
+    } 
     println!("installing zsh syntax highlighting");
     clone::clone_repo(
         Path::new(&*shellexpand::tilde(

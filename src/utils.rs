@@ -139,7 +139,8 @@ pub fn stow(path: &Path) -> Result<(), String> {
         "./wallpaper.png",
     ];
     if exec_exists("nixos-rebuild") {
-        blacklist.append(vec!["./zsh"])
+        let mut additional_blacklist: Vec<&str> = vec!["./zsh"];       
+        blacklist.append(&mut additional_blacklist);
     }
     let current_dir = current_dir().unwrap();
     assert!(set_current_dir(path).is_ok());

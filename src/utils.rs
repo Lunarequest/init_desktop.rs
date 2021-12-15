@@ -128,8 +128,8 @@ pub fn install_omz() -> Result<(), String> {
 }
 
 pub fn stow(path: &Path) -> Result<(), String> {
-    // first we get a ReadDir of all the files/dirs in the path
-    let blacklist: Vec<&str> = vec![
+    // first we get a ReadDir of all the files/dirs in the path 
+    let mut blacklist: Vec<&str> = vec![
         "./.git",
         "./.github",
         "./nvim_old",
@@ -138,6 +138,9 @@ pub fn stow(path: &Path) -> Result<(), String> {
         "./README.md",
         "./wallpaper.png",
     ];
+    if exec_exists("nixos-rebuild") {
+        blacklist.append(vec!["./zsh"])
+    }
     let current_dir = current_dir().unwrap();
     assert!(set_current_dir(path).is_ok());
     let paths = fs::read_dir(".").unwrap();
